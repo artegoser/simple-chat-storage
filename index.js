@@ -86,12 +86,7 @@ class SqliteChatStorage {
                         }
                     }
                     this.db.run(`INSERT INTO ${this.name} (user, message, time) VALUES ("${user}", "${message}", "${time}")`, ()=>{
-                        this.messages.push({
-                            user:user,
-                            message:message,
-                            time:time
-                        });
-                        res();
+                        this.updatemessages().then(res);
                     });
                 });
             });
@@ -117,6 +112,16 @@ class SqliteChatStorage {
                 this.updatemessages().then(res);
             });
         });
+    }
+    replacemessage(id, message){
+        return new Promise((res, rej)=>{
+            this.db.run(`UPDATE ${this.name} SET message = "${message}" WHERE ID = ${id}`, ()=>{
+                this.updatemessages().then(res);
+            });
+        });
+    }
+    getBdId(id){
+        return this.messages[id].ID;
     }
     erase(){
         return new Promise((res, rej)=>{

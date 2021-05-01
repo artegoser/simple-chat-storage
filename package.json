@@ -1,6 +1,6 @@
 {
   "name": "simple-chat-storage",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Simple chat storage for chat's",
   "homepage": "https://github.com/artegoser/simple-chat-storage",
   "main": "index.js",
