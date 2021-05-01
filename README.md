@@ -20,7 +20,6 @@ prepare() - prepares the storage and return a promise
 deletemessage(id) - deletes the message by id  
 replacemessage(id, message) - replaces the message by id  
 getBdId(id) - returns the real message ID  
-updatemessages() - updates data from the storage (but the library itself updates storage when adding or deleting messages)  
 
 ### Example
 ```javascript
@@ -45,5 +44,6 @@ constructor(name, length=100, dir="./chats") - constructor of chat class
 ```javascript
 let chat = require("simple-chat-storage").JSON;
 let test = new chat("test");
-test.addmessage("artegoser", "Hello World!");
+test.addmessage("Dr. Who", "Fez!");
+console.log(test.messages);
 ```

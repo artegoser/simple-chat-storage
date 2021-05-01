@@ -4,18 +4,18 @@ const strftime = require('strftime');
 class JsonChatStorage {
 	constructor(name, length=100, dir="./chats"){
         this.meslength = length;
-        this.name = name;
-		this.dir = dir;
+        this._name = name;
+        this._dir = dir;
         try{
-            this.messages = this.req(`./${this.dir}/${this.name}.json`);
+            this.messages = this._req(`./${this._dir}/${this._name}.json`);
         } catch{
             this.messages = [];
         }
 		
-		if (!fs.existsSync(this.dir)) fs.mkdirSync(this.dir);
+		if (!fs.existsSync(this._dir)) fs.mkdirSync(this._dir);
     }
 
-    req(path){
+    _req(path){
 		return JSON.parse(fs.readFileSync(path, 'utf-8'));
 	}
 
@@ -55,7 +55,7 @@ class JsonChatStorage {
         return strftime("%d.%m.%Y %H:%M:%S");
     }
     backup(){
-        fs.writeFileSync(`./${this.dir}/${this.name}.json`, JSON.stringify(this.messages, null, 4));
+        fs.writeFileSync(`./${this._dir}/${this._name}.json`, JSON.stringify(this.messages, null, 4));
     }
 
 }
@@ -63,38 +63,38 @@ class JsonChatStorage {
 class SqliteChatStorage {
     constructor(name, dbpath="chat.db", length=false){
         const sqlite3 = require('sqlite3');
-        this.db = new sqlite3.Database(dbpath);
+        this._db = new sqlite3.Database(dbpath);
         this.meslength = length;
-        this.name = name;
+        this._name = name;
     }
     prepare(){
         return new Promise((res, rej)=>{
-            this.db.serialize(()=>{
-                this.db.run(`CREATE TABLE IF NOT EXISTS ${this.name} (ID INTEGER PRIMARY KEY AUTOINCREMENT, user, message, time)`);
-                this.updatemessages().then(res);
+            this._db.serialize(()=>{
+                this._db.run(`CREATE TABLE IF NOT EXISTS ${this._name} (ID INTEGER PRIMARY KEY AUTOINCREMENT, user, message, time)`);
+                this._updatemessages().then(res);
             });
         });
     }
     addmessage(user, message, time=this.time){
         return new Promise((res, rej)=>{
-            this.db.serialize(()=>{
-                this.db.all(`SELECT COUNT(*) as count FROM ${this.name}`, (err, row)=>{
+            this._db.serialize(()=>{
+                this._db.all(`SELECT COUNT(*) as count FROM ${this._name}`, (err, row)=>{
                     if(this.meslength){
                         if(row[0].count >= this.meslength){
-                            this.db.run(`DELETE FROM ${this.name} WHERE ID = (SELECT MIN(ID) FROM ${this.name})`)
+                            this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MIN(ID) FROM ${this._name})`)
                             this.messages.shift();
                         }
                     }
-                    this.db.run(`INSERT INTO ${this.name} (user, message, time) VALUES ("${user}", "${message}", "${time}")`, ()=>{
-                        this.updatemessages().then(res);
+                    this._db.run(`INSERT INTO ${this._name} (user, message, time) VALUES ("${user}", "${message}", "${time}")`, ()=>{
+                        this._updatemessages().then(res);
                     });
                 });
             });
         });
     }
-    updatemessages(){
+    _updatemessages(){
         return new Promise((res, rej)=>{
-            this.db.all(`SELECT * FROM ${this.name}`, (err, row)=>{
+            this._db.all(`SELECT * FROM ${this._name}`, (err, row)=>{
                 this.messages = row;
                 res();
             });
@@ -103,20 +103,20 @@ class SqliteChatStorage {
     deletelastmessage(user){
         return new Promise((res, rej)=>{
             this.messages.shift();
-            this.db.run(`DELETE FROM ${this.name} WHERE ID = (SELECT MAX(ID) FROM ${this.name}) AND user = "${user}"`, res);
+            this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MAX(ID) FROM ${this._name}) AND user = "${user}"`, res);
         });
     }
     deletemessage(id){
         return new Promise((res, rej)=>{
-            this.db.run(`DELETE FROM ${this.name} WHERE ID = ${id}`, ()=>{
-                this.updatemessages().then(res);
+            this._db.run(`DELETE FROM ${this._name} WHERE ID = ${id}`, ()=>{
+                this._updatemessages().then(res);
             });
         });
     }
     replacemessage(id, message){
         return new Promise((res, rej)=>{
-            this.db.run(`UPDATE ${this.name} SET message = "${message}" WHERE ID = ${id}`, ()=>{
-                this.updatemessages().then(res);
+            this._db.run(`UPDATE ${this._name} SET message = "${message}" WHERE ID = ${id}`, ()=>{
+                this._updatemessages().then(res);
             });
         });
     }
@@ -126,7 +126,7 @@ class SqliteChatStorage {
     erase(){
         return new Promise((res, rej)=>{
             this.messages = [];
-            this.db.run(`DROP TABLE IF EXISTS ${this.name}`, res);
+            this._db.run(`DROP TABLE IF EXISTS ${this._name}`, res);
         });
     }
     get time(){
