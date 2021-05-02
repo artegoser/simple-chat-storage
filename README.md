@@ -3,8 +3,10 @@
 [![NPM](https://nodei.co/npm/simple-chat-storage.png)](https://nodei.co/npm/simple-chat-storage/)  
 
 ![npm](https://img.shields.io/npm/v/simple-chat-storage)
+![npm](https://img.shields.io/npm/dt/simple-chat-storage)
 ![NPM](https://img.shields.io/npm/l/simple-chat-storage)
 ![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/simple-chat-storage)
+
 
 ## API 1.1.1 (There is both a JSON storage and a sqlite storage)
   
