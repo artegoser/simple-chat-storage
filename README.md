@@ -8,13 +8,13 @@
 ![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/simple-chat-storage)
 
 
-## API 1.1.1 (There is both a JSON storage and a sqlite storage)
+## API (There is both a JSON storage and a sqlite storage)
   
-addmessage(user, message, time="default") - add message to chat  
+addmessage(user, message, time=this.time) - add message to chat  
 deletelastmessage(user) - delete last user message  
 erase() - erase the storage
 
-## API 1.1.1 (sqlite)
+## API (sqlite)
 
 constructor(name, dbpath="chat.db", length=false) - name(name of the chat table),  dbath(path to the database), length(false if infinite)
 
@@ -38,7 +38,7 @@ test.prepare().then(()=>{
 });
 ```
 
-## API 1.1.1 (JSON)
+## API (JSON)
 
 constructor(name, length=100, dir="./chats") - constructor of chat class  
 
