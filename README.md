@@ -4,8 +4,8 @@
 
 ![npm](https://img.shields.io/npm/v/simple-chat-storage)
 ![npm](https://img.shields.io/npm/dt/simple-chat-storage)
+![coverage](https://img.shields.io/badge/coverage-60.29%25-yellowgreen)
 ![NPM](https://img.shields.io/npm/l/simple-chat-storage)
-![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/simple-chat-storage)
 
 
 ## API (There is both a JSON storage and a sqlite storage)
@@ -40,7 +40,7 @@ test.prepare().then(()=>{
 
 ## API (JSON)
 
-constructor(name, length=100, dir="./chats") - constructor of chat class  
+constructor(name, length=false, dir="./chats") - name(name of the chat table), length(false if infinite)  
 
 ### Example
 ```javascript
@@ -49,3 +49,8 @@ let test = new chat("test");
 test.addmessage("Dr. Who", "Fez!");
 console.log(test.messages);
 ```
+
+## Coverage
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+----------|---------|----------|---------|---------|---------------------------
+ index.js |   58.57 |    63.64 |   58.06 |   60.29 | 12,24,34,41-52,89-91,110-135

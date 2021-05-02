@@ -2,7 +2,7 @@ const fs = require('fs');
 const strftime = require('strftime');
 
 class JsonChatStorage {
-	constructor(name, length=100, dir="./chats"){
+	constructor(name, length=false, dir="./chats"){
         this.meslength = length;
         this._name = name;
         this._dir = dir;
@@ -30,7 +30,7 @@ class JsonChatStorage {
         }
 		
         this.messages.push(mess);
-        if(this.messages.length>this.meslength){
+        if(this.messages.length>this.meslength && this.meslength){
             this.messages.shift();
         }
         this.backup();
@@ -66,13 +66,19 @@ class SqliteChatStorage {
         this._db = new sqlite3.Database(dbpath);
         this.meslength = length;
         this._name = name;
+        this._prepared = false;
     }
     prepare(){
         return new Promise((res, rej)=>{
-            this._db.serialize(()=>{
-                this._db.run(`CREATE TABLE IF NOT EXISTS ${this._name} (ID INTEGER PRIMARY KEY AUTOINCREMENT, user, message, time)`);
-                this._updatemessages().then(res);
-            });
+            if(!this._prepared){
+                this._db.serialize(()=>{
+                    this._db.run(`CREATE TABLE IF NOT EXISTS ${this._name} (ID INTEGER PRIMARY KEY AUTOINCREMENT, user, message, time)`);
+                    this._prepared = true;
+                    this._updatemessages().then(res);
+                });
+            } else{
+                res();
+            }
         });
     }
     addmessage(user, message, time=this.time){
