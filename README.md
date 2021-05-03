@@ -4,7 +4,7 @@
 
 ![npm](https://img.shields.io/npm/v/simple-chat-storage)
 ![npm](https://img.shields.io/npm/dt/simple-chat-storage)
-![coverage](https://img.shields.io/badge/coverage-60.29%25-yellowgreen)
+[![Coverage Status](https://coveralls.io/repos/github/artegoser/simple-chat-storage/badge.svg?branch=main)](https://coveralls.io/github/artegoser/simple-chat-storage?branch=main)
 ![NPM](https://img.shields.io/npm/l/simple-chat-storage)
 
 

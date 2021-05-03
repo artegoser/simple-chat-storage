@@ -5,8 +5,12 @@
   "homepage": "https://github.com/artegoser/simple-chat-storage",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests",
-    "coverage": "nyc npm run test"
+    "test": "mocha tests.spec.js",
+    "coverage": "nyc npm test",
+    "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls"
+  },
+  "nyc": {
+    "exclude": "**/*.spec.js" 
   },
   "keywords": [
     "storage",
@@ -19,6 +23,7 @@
     "url": "git://github.com/artegoser/simple-chat-storage.git"
   },
   "dependencies": {
+    "coveralls": "^3.1.0",
     "sqlite3": "^5.0.2",
     "strftime": "^0.10.0"
   },

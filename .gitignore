@@ -74,3 +74,7 @@ typings/
 
 # FuseBox cache
 .fusebox/
+.coveralls.yml
+.travis.yml
+chat.db
+chats/test.json
