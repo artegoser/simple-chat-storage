@@ -48,7 +48,6 @@ describe("JSON",()=>{
             test.addmessage("notHarry", "Hello!");
             test.deletelastmessage("Harry")
             for(let i = 0; i<test.messages.length; i++){
-                console.log(test.messages[i].user);
                 if(test.messages[i].user === "Harry") throw new Error(`Last message ${user} not deleted`);
             }
         });
@@ -67,9 +66,9 @@ describe("JSON",()=>{
 
 describe("sqlite",()=>{
     let chat = require("./index").sqlite;
-    let test = new chat("test");
+    let test = new chat("test", "chat.db", 15);
     describe(`sqlite add message`, ()=>{
-        for(let i = 0; i<5; i++){
+        for(let i = 0; i<8; i++){
             describe(`test ${i}`, ()=>{
                 let message = randch(15);
                 let user = randch(5);
@@ -110,5 +109,14 @@ describe("sqlite",()=>{
                 });
             });
         }
+    });
+    it("should replace message to HEllo lol", ()=>{
+        return test.prepare().then(()=>{
+            return test.addmessage("Cool", "not lol").then(()=>{
+                return test.replacemessage(test.getBdId(0), "HEllo lol").then(()=>{
+                    if(test.messages[0].message !== "HEllo lol") throw new Error(`message is not replaced ${test.messages[2].message}, HEllo lol`);
+                });
+            });
+        });
     });
 });

@@ -42,10 +42,8 @@ class JsonChatStorage {
             if(this.messages[i].user == user){
                 this.messages.splice(i, 1);
                 this.backup();
-                return true;
             }
         }
-        return false;
     }
     deletemessage(id){
         this.messages.splice(id, 1)
@@ -109,13 +107,13 @@ class SqliteChatStorage {
             });
         });
     }
-    deletelastmessage(user){
-        return new Promise((res, rej)=>{
-            this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MAX(ID) FROM ${this._name} WHERE user = "${user}")`, ()=>{
-                this._updatemessages().then(res);
-            });
-        });
-    }
+    // deletelastmessage(user){
+    //     return new Promise((res, rej)=>{
+    //         this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MAX(ID) FROM ${this._name} WHERE user = "${user}")`, ()=>{
+    //             this._updatemessages().then(res);
+    //         });
+    //     });    /* FOR REPROCESSING */
+    // }
     deletemessage(id){
         return new Promise((res, rej)=>{
             this._db.run(`DELETE FROM ${this._name} WHERE ID = ${id}`, ()=>{
