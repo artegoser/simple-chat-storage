@@ -10,9 +10,8 @@
 
 ## API (There is both a JSON storage and a sqlite storage)
   
-addmessage(user, message, time=this.time) - add message to chat  
-deletelastmessage(user) - delete last user message  
-erase() - erase the storage
+addmessage(user, message, time=this.time) - adds message to chat  
+erase() - erases the storage
 
 ## API (sqlite)
 
@@ -41,6 +40,7 @@ test.prepare().then(()=>{
 ## API (JSON)
 
 constructor(name, length=false, dir="./chats") - name(name of the chat table), length(false if infinite)  
+deletelastmessage(user) - deletes last user message  
 
 ### Example
 ```javascript
@@ -52,5 +52,6 @@ console.log(test.messages);
 
 ## Coverage
 File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
-----------|---------|----------|---------|---------|---------------------------
- index.js |   58.57 |    63.64 |   58.06 |   60.29 | 12,24,34,41-52,89-91,110-135
+----------|---------|----------|---------|---------|-------------------
+All files |   92.42 |    79.17 |      90 |   92.19 |
+ index.js |   92.42 |    79.17 |      90 |   92.19 | 52-53,135-137
