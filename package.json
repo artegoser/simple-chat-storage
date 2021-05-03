@@ -1,6 +1,6 @@
 {
   "name": "simple-chat-storage",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Simple chat storage for chat's",
   "homepage": "https://github.com/artegoser/simple-chat-storage",
   "main": "index.js",
@@ -23,11 +23,11 @@
     "url": "git://github.com/artegoser/simple-chat-storage.git"
   },
   "dependencies": {
-    "coveralls": "^3.1.0",
     "sqlite3": "^5.0.2",
     "strftime": "^0.10.0"
   },
   "devDependencies": {
+    "coveralls": "^3.1.0",
     "mocha": "^8.3.2",
     "nyc": "^15.1.0"
   }
