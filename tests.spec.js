@@ -1,69 +1,114 @@
 function randch(length) {
-    var result           = [];
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    randchi++;
+    var result = [];
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
     for ( var i = 0; i < length; i++ ) {
       result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
    }
-   return result.join('');
+   return result.join('')+randchi;
 }
-
+let randchi = 0;
 describe("JSON",()=>{
     let chat = require("./index").JSON;
-    let test = new chat("test");
-    for(let i = 0; i<5; i++){
-        describe(`JSON message test ${i}`, ()=>{
-            let message = randch(15);
-            let user = randch(5);
-            
-            it(`should add a user "${user}" to message`, ()=>{
-                test.addmessage(user, message);
-                if(test.messages[test.messages.length-1].user !== user){
-                    if(!test.messages[test.messages.length-1].user) throw new Error("there is no user")
-                    throw new Error(`wrong user added "${user}" "${test.messages[test.messages.length-1].user}"`);
-                }
-            });
-
-            it(`should add a message "${message}"`, ()=>{
-                test.addmessage(user, message);
-                if(test.messages[test.messages.length-1].message !== message){
-                    if(!test.messages[test.messages.length-1].message) throw new Error("there is no message")
-                    throw new Error(`wrong message added "${message}" "${test.messages[test.messages.length-1].message}"`);
-                }
-            });
+    let test = new chat("test", 15);
+    describe(`JSON add message`, ()=>{
+        it(`should return false when !message`, ()=>{
+            if(test.addmessage("artegoser")) throw new Error("not returning false")
         });
-    }
+        it(`should return false when !user`, ()=>{
+            if(test.addmessage()) throw new Error("not returning false")
+        });
+        for(let i = 0; i<8; i++){
+            describe(`test ${i}`, ()=>{
+                let message = randch(15);
+                let user = randch(5);
+                it(`should add a user "${user}" to message`, ()=>{
+                    test.addmessage(user, message);
+                    if(test.messages[test.messages.length-1].user !== user){
+                        if(!test.messages[test.messages.length-1].user) throw new Error("there is no user")
+                        throw new Error(`wrong user added "${user}" "${test.messages[test.messages.length-1].user}"`);
+                    }
+                });
+
+                it(`should add a message "${message}"`, ()=>{
+                    test.addmessage(user, message);
+                    if(test.messages[test.messages.length-1].message !== message){
+                        if(!test.messages[test.messages.length-1].message) throw new Error("there is no message")
+                        throw new Error(`wrong message added "${message}" "${test.messages[test.messages.length-1].message}"`);
+                    }
+                });
+            });
+        }
+    });
+    describe(`JSON delete message`, ()=>{
+        let user = "Harry";
+        it(`should delete lastmessage ${user}`,()=>{
+            test.addmessage("Harry", "Hello!");
+            test.addmessage("notHarry", "Hello!");
+            test.deletelastmessage("Harry")
+            for(let i = 0; i<test.messages.length; i++){
+                console.log(test.messages[i].user);
+                if(test.messages[i].user === "Harry") throw new Error(`Last message ${user} not deleted`);
+            }
+        });
+
+        for(let i = 0; i<5; i++){
+            it(`should delete message ${i}`,()=>{
+                let init_message = test.messages[i];
+                test.deletemessage(i);
+                if(test.messages[i]===init_message){
+                    throw new Error(`message is not deleted ${test.messages[i].message}, ${i}`);
+                }
+            });
+        }
+    });
 });
 
 describe("sqlite",()=>{
     let chat = require("./index").sqlite;
     let test = new chat("test");
-    for(let i = 0; i<5; i++){
-        describe(`sqlite message test ${i}`, ()=>{
-            let message = randch(15);
-            let user = randch(5);
-            it(`should add a user "${user}" to message`, ()=>{
-                it(`should add loh`)
-                return test.prepare().then(()=>{
-                    return test.addmessage(user, message).then(()=>{
-                        if(test.messages[test.messages.length-1].user !== user){
-                            if(!test.messages[test.messages.length-1].user) throw new Error("there is no user")
-                            throw new Error(`wrong user added "${user}" "${test.messages[test.messages.length-1].user}"`);
-                        }
+    describe(`sqlite add message`, ()=>{
+        for(let i = 0; i<5; i++){
+            describe(`test ${i}`, ()=>{
+                let message = randch(15);
+                let user = randch(5);
+                it(`should add a user "${user}" to message`, ()=>{
+                    return test.prepare().then(()=>{
+                        return test.addmessage(user, message).then(()=>{
+                            if(test.messages[test.messages.length-1].user !== user){
+                                if(!test.messages[test.messages.length-1].user) throw new Error("there is no user")
+                                throw new Error(`wrong user added "${user}" "${test.messages[test.messages.length-1].user}"`);
+                            }
+                        });
                     });
                 });
-            });
 
-            it(`should add a message "${message}"`, ()=>{
+                it(`should add a message "${message}"`, ()=>{
+                    return test.prepare().then(()=>{
+                        return test.addmessage(user, message).then(()=>{
+                            if(test.messages[test.messages.length-1].message !== message){
+                                if(!test.messages[test.messages.length-1].message) throw new Error("there is no message")
+                                throw new Error(`wrong message added "${message}"`);
+                            }
+                        });
+                    });
+                });
+            });
+        }
+    });
+    describe(`sqlite delete message`, ()=>{
+        for(let i = 0; i<5; i++){
+            it(`should delete message ${i}`,()=>{
                 return test.prepare().then(()=>{
-                    return test.addmessage(user, message).then(()=>{
-                        if(test.messages[test.messages.length-1].message !== message){
-                            if(!test.messages[test.messages.length-1].message) throw new Error("there is no message")
-                            throw new Error(`wrong message added "${message}"`);
+                    let init_message = test.messages[i];
+                    return test.deletemessage(test.getBdId(i)).then(()=>{
+                        if(test.messages[i]===init_message){
+                            throw new Error(`message is not deleted ${test.messages[i].message}, ${i}`);
                         }
                     });
                 });
             });
-        });
-    }
+        }
+    });
 });

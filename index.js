@@ -20,7 +20,7 @@ class JsonChatStorage {
 	}
 
     addmessage(user, message, time=this.time){
-        if(message==""){
+        if(!message || !user){
             return false;
         }
         let mess = {
@@ -46,6 +46,9 @@ class JsonChatStorage {
             }
         }
         return false;
+    }
+    deletemessage(id){
+        this.messages.splice(id, 1)
     }
     erase(){
         this.messages = [];
@@ -108,8 +111,9 @@ class SqliteChatStorage {
     }
     deletelastmessage(user){
         return new Promise((res, rej)=>{
-            this.messages.shift();
-            this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MAX(ID) FROM ${this._name}) AND user = "${user}"`, res);
+            this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MAX(ID) FROM ${this._name} WHERE user = "${user}")`, ()=>{
+                this._updatemessages().then(res);
+            });
         });
     }
     deletemessage(id){
