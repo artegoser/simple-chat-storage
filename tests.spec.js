@@ -110,6 +110,49 @@ describe("sqlite",()=>{
             });
         }
     });
+    it("should throw error when messages has been changed", ()=>{
+        let error = false;
+        try{
+            test.messages = 0;
+        } catch{
+            error = true;
+        }
+        if(!error){
+            throw new Error("no error occurred")
+        }
+    });
+    describe(`sqlite select message`, ()=>{
+        it("should select all messages", ()=>{
+            return test.prepare().then(()=>{
+                return test.select("*").then((val)=>{
+                    if(val.length!==test.messages.length){
+                        throw new Error("not all messages selected")
+                    }
+                });
+            });
+        });
+        it("should throw error", ()=>{
+            return test.prepare().then(()=>{
+                let error = false;
+                return test.select("err").catch((err)=>{
+                    error = true;
+                }).then(()=>{
+                    if(!error) throw new Error("no error occurred");
+                })
+            });
+        });
+        it("should select all messages where id>3", ()=>{
+            return test.prepare().then(()=>{
+                return test.select("*", "id>3").then((val)=>{
+                    for(let i=0; i<val.length; i++){
+                        if(val[i].id <= 3){
+                            throw new Error("incorrect selection")
+                        }
+                    }
+                });
+            });
+        });
+    });
     it("should replace message to HEllo lol", ()=>{
         return test.prepare().then(()=>{
             return test.addmessage("Cool", "not lol").then(()=>{

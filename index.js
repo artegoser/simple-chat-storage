@@ -89,7 +89,7 @@ class SqliteChatStorage {
                     if(this.meslength){
                         if(row[0].count >= this.meslength){
                             this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MIN(ID) FROM ${this._name})`)
-                            this.messages.shift();
+                            this._messages.shift();
                         }
                     }
                     this._db.run(`INSERT INTO ${this._name} (user, message, time) VALUES ("${user}", "${message}", "${time}")`, ()=>{
@@ -102,18 +102,29 @@ class SqliteChatStorage {
     _updatemessages(){
         return new Promise((res, rej)=>{
             this._db.all(`SELECT * FROM ${this._name}`, (err, row)=>{
-                this.messages = row;
+                this._messages = row;
                 res();
             });
         });
     }
-    // deletelastmessage(user){
-    //     return new Promise((res, rej)=>{
-    //         this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MAX(ID) FROM ${this._name} WHERE user = "${user}")`, ()=>{
-    //             this._updatemessages().then(res);
-    //         });
-    //     });    /* FOR REPROCESSING */
-    // }
+    select(what, where){
+        if (where){
+            return new Promise((res, rej)=>{
+                this._db.all(`SELECT ${what} FROM ${this._name} WHERE ${where}`, (err, row)=>{
+                    if(err) rej(err);
+                    else res(row);
+                });
+            });
+        }
+
+        return new Promise((res, rej)=>{
+            this._db.all(`SELECT ${what} FROM ${this._name}`, (err, row)=>{
+                if(err) rej(err);
+                else res(row);
+            });
+        });
+    }
+
     deletemessage(id){
         return new Promise((res, rej)=>{
             this._db.run(`DELETE FROM ${this._name} WHERE ID = ${id}`, ()=>{
@@ -129,13 +140,19 @@ class SqliteChatStorage {
         });
     }
     getBdId(id){
-        return this.messages[id].ID;
+        return this._messages[id].ID;
     }
     erase(){
         return new Promise((res, rej)=>{
-            this.messages = [];
+            this._messages = [];
             this._db.run(`DROP TABLE IF EXISTS ${this._name}`, res);
         });
+    }
+    get messages(){
+        return this._messages
+    }
+    set messages(v){
+        throw new Error("in sqlite chat storage you can't change the messages variable, you can only read it")
     }
     get time(){
         return strftime("%d.%m.%Y %H:%M:%S");

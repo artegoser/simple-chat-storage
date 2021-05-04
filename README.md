@@ -21,6 +21,7 @@ prepare() - prepares the storage and return a promise
 deletemessage(id) - deletes the message by id  
 replacemessage(id, message) - replaces the message by id  
 getBdId(id) - returns the real message ID  
+select(what, where(optional)).then((row)=>{}).catch((err)=>{}) - SQL selector
 
 ### Example
 ```javascript
@@ -53,5 +54,5 @@ console.log(test.messages);
 ## Coverage
 File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ----------|---------|----------|---------|---------|-------------------
-All files |   92.42 |    79.17 |      90 |   92.19 |
- index.js |   92.42 |    79.17 |      90 |   92.19 | 52-53,135-137
+All files |   92.41 |       80 |   91.89 |   93.33 |
+ index.js |   92.41 |       80 |   91.89 |   93.33 | 52-53,146-148
