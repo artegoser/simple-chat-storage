@@ -2,6 +2,13 @@ const fs = require('fs');
 const strftime = require('strftime');
 
 class JsonChatStorage {
+    /**
+     * Chat storage. Storage method (JSON)
+     * @constructor
+     * @param {string} name name of JSON storage 
+     * @param {integer|false} length number of stored messages
+     * @param {string} dir folder for storing all json storages
+     */
 	constructor(name, length=false, dir="./chats"){
         this.meslength = length;
         this._name = name;
@@ -18,7 +25,13 @@ class JsonChatStorage {
     _req(path){
 		return JSON.parse(fs.readFileSync(path, 'utf-8'));
 	}
-
+    /**
+     * Adds a message to JSON storage
+     * @param {string} user user who sent the message
+     * @param {string} message the message the user sent
+     * @param {string|none} time time when the message was sent if none then time = current time
+     * @returns added message
+     */
     addmessage(user, message, time=this.time){
         if(!message || !user){
             return false;
@@ -36,7 +49,10 @@ class JsonChatStorage {
         this.backup();
         return mess;
     }
-
+    /**
+     * Deletes a last message of user
+     * @param {string} user the user from whom you want to delete the last message
+     */
     deletelastmessage(user){
         for (let i = this.messages.length-1; i >= 0; i--){
             if(this.messages[i].user == user){
@@ -45,16 +61,29 @@ class JsonChatStorage {
             }
         }
     }
-    deletemessage(id){
-        this.messages.splice(id, 1)
+    /**
+     * Deletes a message by index(constructor.messages[index])
+     * @param {integer} index 
+     */
+    deletemessage(index){
+        this.messages.splice(index, 1)
     }
+    /**
+     * erases a JSON storage
+     */
     erase(){
         this.messages = [];
         this.backup();
     }
+    /**
+     * current time
+     */
     get time(){
         return strftime("%d.%m.%Y %H:%M:%S");
     }
+    /**
+     * backups a JSON storage
+     */
     backup(){
         fs.writeFileSync(`./${this._dir}/${this._name}.json`, JSON.stringify(this.messages, null, 4));
     }
@@ -62,6 +91,13 @@ class JsonChatStorage {
 }
 
 class SqliteChatStorage {
+    /**
+     * Chat storage. Storage method (JSON)
+     * @constructor
+     * @param {string} name name of table in sqlite database
+     * @param {string} dbpath path to sqlite database
+     * @param {integer|false} length number of stored messages
+     */
     constructor(name, dbpath="chat.db", length=false){
         const sqlite3 = require('sqlite3');
         this._db = new sqlite3.Database(dbpath);
@@ -69,6 +105,10 @@ class SqliteChatStorage {
         this._name = name;
         this._prepared = false;
     }
+    /**
+     * Preparing and initializing the table
+     * @returns promise
+     */
     prepare(){
         return new Promise((res, rej)=>{
             if(!this._prepared){
@@ -82,6 +122,13 @@ class SqliteChatStorage {
             }
         });
     }
+    /**
+     * Adds a message to sqlite table
+     * @param {string} user user who sent the message
+     * @param {string} message the message the user sent
+     * @param {string|none} time time when the message was sent if none then time = current time
+     * @returns promise
+     */
     addmessage(user, message, time=this.time){
         return new Promise((res, rej)=>{
             this._db.serialize(()=>{
@@ -107,6 +154,12 @@ class SqliteChatStorage {
             });
         });
     }
+    /**
+     * Select a message(s) by sql-query
+     * @param {string} what sql column
+     * @param {string|none} where sql condition
+     * @returns promise with sql response
+     */
     select(what, where){
         if (where){
             return new Promise((res, rej)=>{
@@ -124,7 +177,24 @@ class SqliteChatStorage {
             });
         });
     }
-
+    /**
+     * Deletes a message(s) by condition
+     * @param {string} where sql condition
+     * @returns promise
+     */
+    delete(where){
+        return new Promise((res, rej)=>{
+            this._db.run(`DELETE FROM ${this._name} WHERE ${where}`, (err)=>{
+                if(err) rej(err);
+                this._updatemessages().then(res);
+            });
+        });
+    }
+    /**
+     * Deletes a message by id
+     * @param {integer} id message id (constructor.messages[*].id)
+     * @returns promise
+     */
     deletemessage(id){
         return new Promise((res, rej)=>{
             this._db.run(`DELETE FROM ${this._name} WHERE ID = ${id}`, ()=>{
@@ -132,6 +202,12 @@ class SqliteChatStorage {
             });
         });
     }
+    /**
+     * Replace a message by id
+     * @param {integer} id message id (constructor.messages[*].id)
+     * @param {string} message message to replace
+     * @returns promise
+     */
     replacemessage(id, message){
         return new Promise((res, rej)=>{
             this._db.run(`UPDATE ${this._name} SET message = "${message}" WHERE ID = ${id}`, ()=>{
@@ -139,21 +215,35 @@ class SqliteChatStorage {
             });
         });
     }
-    getBdId(id){
-        return this._messages[id].ID;
+    /**
+     * @param {integer} index 
+     * @returns id of message from index (constructor.messages[index].id)
+     */
+    getBdId(index){
+        return this._messages[index].ID;
     }
+    /**
+     * Erases the sqlite table
+     * @returns promise
+     */
     erase(){
         return new Promise((res, rej)=>{
             this._messages = [];
             this._db.run(`DROP TABLE IF EXISTS ${this._name}`, res);
         });
     }
+    /**
+     * Get all messages in sqlite table
+     */
     get messages(){
         return this._messages
     }
     set messages(v){
         throw new Error("in sqlite chat storage you can't change the messages variable, you can only read it")
     }
+    /**
+     * Get current time
+     */
     get time(){
         return strftime("%d.%m.%Y %H:%M:%S");
     }

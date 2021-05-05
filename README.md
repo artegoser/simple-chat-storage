@@ -8,10 +8,13 @@
 ![NPM](https://img.shields.io/npm/l/simple-chat-storage)
 
 
+# Full Documentation - [Documentation](https://artegoser.github.io\simple-chat-storage\documentation)
+
 ## API (There is both a JSON storage and a sqlite storage)
   
 addmessage(user, message, time=this.time) - adds message to chat  
 erase() - erases the storage
+deletemessage(id) - deletes the message by id  
 
 ## API (sqlite)
 
@@ -20,8 +23,9 @@ constructor(name, dbpath="chat.db", length=false) - name(name of the chat table)
 prepare() - prepares the storage and return a promise  
 deletemessage(id) - deletes the message by id  
 replacemessage(id, message) - replaces the message by id  
-getBdId(id) - returns the real message ID  
+getBdId(index) - returns id of message from index (constructor.messages[index].id)
 select(what, where(optional)).then((row)=>{}).catch((err)=>{}) - SQL selector
+delete(where) - SQL deleter
 
 ### Example
 ```javascript
@@ -54,5 +58,5 @@ console.log(test.messages);
 ## Coverage
 File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ----------|---------|----------|---------|---------|-------------------
-All files |   92.41 |       80 |   91.89 |   93.33 |
- index.js |   92.41 |       80 |   91.89 |   93.33 | 52-53,146-148
+All files |   92.86 |    81.25 |    92.5 |   93.67 |
+ index.js |   92.86 |    81.25 |    92.5 |   93.67 | 75-76,230-232

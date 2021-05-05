@@ -77,3 +77,5 @@ typings/
 .coveralls.yml
 chat.db
 chats/test.json
+
+docdash/

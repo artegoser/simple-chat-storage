@@ -138,7 +138,7 @@ describe("sqlite",()=>{
                     error = true;
                 }).then(()=>{
                     if(!error) throw new Error("no error occurred");
-                })
+                });
             });
         });
         it("should select all messages where id>3", ()=>{
@@ -146,7 +146,30 @@ describe("sqlite",()=>{
                 return test.select("*", "id>3").then((val)=>{
                     for(let i=0; i<val.length; i++){
                         if(val[i].id <= 3){
-                            throw new Error("incorrect selection")
+                            throw new Error("incorrect selection");
+                        }
+                    }
+                });
+            });
+        });
+    });
+    describe(`sqlite delete message`, ()=>{
+        it("should throw error", ()=>{
+            return test.prepare().then(()=>{
+                let error = false;
+                return test.delete("err").catch((err)=>{
+                    error = true;
+                }).then(()=>{
+                    if(!error) throw new Error("no error occurred");
+                });
+            });
+        });
+        it("should delete all messages where id<10", ()=>{
+            return test.prepare().then(()=>{
+                return test.delete("id<10").then(()=>{
+                    for(let i=0; i<test.messages.length; i++){
+                        if(test.messages[i].id < 10){
+                            throw new Error("incorrect deletion");
                         }
                     }
                 });
