@@ -8,7 +8,7 @@
     "test": "mocha tests.spec.js",
     "coverage": "nyc npm test",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
-    "docs": "jsdoc index.js -t docdash -d D:\\github\\artegoser.github.io\\simple-chat-storage\\documentation",
+    "docs": "jsdoc index.js -t docdash -d D:\\github\\artegoser.github.io\\simple-chat-storage\\documentation -r ./README.md",
     "buildall":"npm run coveralls && npm run docs"
   },
   "nyc": {
