@@ -8,7 +8,7 @@
 ![NPM](https://img.shields.io/npm/l/simple-chat-storage)
 
 
-# Full Documentation - [Documentation](https://artegoser.github.io/simple-chat-storage/documentation)
+# Full Documentation - [Documentation](https://artegoser.github.io/simple-chat-storage/documentation/index.html)
 
 ## API (There is both a JSON storage and a sqlite storage)
   
