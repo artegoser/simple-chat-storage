@@ -136,7 +136,6 @@ class SqliteChatStorage {
                     if(this.meslength){
                         if(row[0].count >= this.meslength){
                             this._db.run(`DELETE FROM ${this._name} WHERE ID = (SELECT MIN(ID) FROM ${this._name})`)
-                            this._messages.shift();
                         }
                     }
                     this._db.run(`INSERT INTO ${this._name} (user, message, time) VALUES ("${user}", "${message}", "${time}")`, ()=>{
