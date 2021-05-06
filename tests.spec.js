@@ -133,11 +133,8 @@ describe("sqlite",()=>{
         });
         it("should throw error", ()=>{
             return test.prepare().then(()=>{
-                let error = false;
-                return test.select("err").catch((err)=>{
-                    error = true;
-                }).then(()=>{
-                    if(!error) throw new Error("no error occurred");
+                return test.select("err").then(null, (err)=>{
+                    if(!err) throw new Error("no error occurred")
                 });
             });
         });
@@ -156,11 +153,8 @@ describe("sqlite",()=>{
     describe(`sqlite delete message`, ()=>{
         it("should throw error", ()=>{
             return test.prepare().then(()=>{
-                let error = false;
-                return test.delete("err").catch((err)=>{
-                    error = true;
-                }).then(()=>{
-                    if(!error) throw new Error("no error occurred");
+                return test.delete("err").then(null, (err)=>{
+                    if(!err) throw new Error("no error occurred");
                 });
             });
         });
