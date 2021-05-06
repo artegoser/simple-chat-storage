@@ -157,7 +157,7 @@ class SqliteChatStorage {
      * Select a message(s) by sql-query
      * @param {string} what sql column
      * @param {string|none} where sql condition
-     * @returns promise with sql response
+     * @returns promise(err|row)
      */
     select(what, where){
         if (where){
@@ -186,6 +186,19 @@ class SqliteChatStorage {
             this._db.run(`DELETE FROM ${this._name} WHERE ${where}`, (err)=>{
                 if(err) rej(err);
                 this._updatemessages().then(res);
+            });
+        });
+    }
+    /**
+     * Runs the SQL query with the specified parameters.
+     * @param {string} query SQLite query
+     * @returns promise(err|row)
+     */
+    sqlite_all(query){
+        return new Promise((res, rej)=>{
+            this._db.all(query, (err, row)=>{
+                if(err) rej(err);
+                else res(row);
             });
         });
     }
@@ -239,6 +252,15 @@ class SqliteChatStorage {
     }
     set messages(v){
         throw new Error("in sqlite chat storage you can't change the messages variable, you can only read it")
+    }
+    /**
+     * Get name of sqlite table
+     */
+     get name(){
+        return this._name
+    }
+    set name(v){
+        throw new Error("in sqlite chat storage you can't change the name variable, you can only read it")
     }
     /**
      * Get current time in format YYYY-MM-DD HH:MM:SS

@@ -121,6 +121,17 @@ describe("sqlite",()=>{
             throw new Error("no error occurred")
         }
     });
+    it("should throw error when name has been changed", ()=>{
+        let error = false;
+        try{
+            test.name = 0;
+        } catch{
+            error = true;
+        }
+        if(!error){
+            throw new Error("no error occurred")
+        }
+    });
     describe(`sqlite select message`, ()=>{
         it("should select all messages", ()=>{
             return test.prepare().then(()=>{
@@ -166,6 +177,24 @@ describe("sqlite",()=>{
                             throw new Error("incorrect deletion");
                         }
                     }
+                });
+            });
+        });
+    });
+    describe(`sqlite sqlite_all`, ()=>{
+        it("should select all messages", ()=>{
+            return test.prepare().then(()=>{
+                return test.sqlite_all(`SELECT * FROM ${test.name}`).then((val)=>{
+                    if(val.length!==test.messages.length){
+                        throw new Error("not all messages selected")
+                    }
+                });
+            });
+        });
+        it("should throw error", ()=>{
+            return test.prepare().then(()=>{
+                return test.sqlite_all("err").then(null, (err)=>{
+                    if(!err) throw new Error("no error occurred")
                 });
             });
         });
