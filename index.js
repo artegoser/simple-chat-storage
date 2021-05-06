@@ -76,10 +76,10 @@ class JsonChatStorage {
         this.backup();
     }
     /**
-     * current time
+     * Get current time in format YYYY-MM-DD HH:MM:SS
      */
-    get time(){
-        return strftime("%d.%m.%Y %H:%M:%S");
+     get time(){
+        return strftime("%Y-%m-%d %H:%M:%S");
     }
     /**
      * backups a JSON storage
@@ -147,7 +147,7 @@ class SqliteChatStorage {
     }
     _updatemessages(){
         return new Promise((res, rej)=>{
-            this._db.all(`SELECT * FROM ${this._name}`, (err, row)=>{
+            this._db.all(`SELECT * FROM ${this._name} ORDER BY time`, (err, row)=>{
                 this._messages = row;
                 res();
             });
@@ -241,10 +241,10 @@ class SqliteChatStorage {
         throw new Error("in sqlite chat storage you can't change the messages variable, you can only read it")
     }
     /**
-     * Get current time
+     * Get current time in format YYYY-MM-DD HH:MM:SS
      */
     get time(){
-        return strftime("%d.%m.%Y %H:%M:%S");
+        return strftime("%Y-%m-%d %H:%M:%S");
     }
 }
 
