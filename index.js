@@ -92,7 +92,7 @@ class JsonChatStorage {
 
 class SqliteChatStorage {
     /**
-     * Chat storage. Storage method (JSON)
+     * Chat storage. Storage method (sqlite)
      * @constructor
      * @param {string} name name of table in sqlite database
      * @param {string} dbpath path to sqlite database

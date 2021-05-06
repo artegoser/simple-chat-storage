@@ -8,24 +8,35 @@
 ![NPM](https://img.shields.io/npm/l/simple-chat-storage)
 
 
-# Full Documentation - [Documentation](https://artegoser.github.io/simple-chat-storage/documentation/index.html)
+|📚[Documentation](https://artegoser.github.io/simple-chat-storage/documentation/index.html)|📕[Bugs](https://github.com/artegoser/simple-chat-storage/issues)|
+|-|-|
 
-## API (There is both a JSON storage and a sqlite storage)
+## Installation
+`npm i simple-chat-storage`  
+or  
+`yarn add simple-chat-storage`
+
+## Most usefull features (There is both a JSON storage and a sqlite storage)
   
-addmessage(user, message, time=this.time) - adds message to chat  
-erase() - erases the storage
-deletemessage(id) - deletes the message by id  
+**addmessage(user, message, time(optional))** - adds message to chat  
+**erase()** - erases the storage  
+**deletemessage(index)** - deletes the message by index(storage.messages[index])  
 
-## API (sqlite)
+## Most usefull features (sqlite)
 
-constructor(name, dbpath="chat.db", length=false) - name(name of the chat table),  dbath(path to the database), length(false if infinite)
+new SqliteChatStorage(name, dbpath, length)
+|Name  |Type	     |Default|Description                     |
+|------|-------------|-------|--------------------------------|
+|name  |string       |		 |name of table in sqlite database|
+|dbpath|string       |chat.db|path to sqlite database         |
+|length|integer/false|false  |number of stored messages       |
 
-prepare() - prepares the storage and return a promise  
-deletemessage(id) - deletes the message by id  
-replacemessage(id, message) - replaces the message by id  
-getBdId(index) - returns id of message from index (constructor.messages[index].id)
-select(what, where(optional)).then((row)=>{}).catch((err)=>{}) - SQL selector
-delete(where) - SQL deleter
+**prepare()** - Preparing and initializing the table and returnings a promise  
+**deletemessage(id)** - deletes the message by id  
+**replacemessage(id, message)** - replaces the message by id  
+**delete(where)** - SQL deleter  
+**select(what, where(optional))**.then((row)=>{}).catch((err)=>{}) - SQL selector  
+**getBdId(index)** - returns id of message from index (storage.messages[index].id)
 
 ### Example
 ```javascript
@@ -42,10 +53,18 @@ test.prepare().then(()=>{
 });
 ```
 
-## API (JSON)
+## Most usefull features (JSON)
+`Faster than sqlite, but does not have SQL functions`
 
-constructor(name, length=false, dir="./chats") - name(name of the chat table), length(false if infinite)  
-deletelastmessage(user) - deletes last user message  
+new JsonChatStorage(name, length, dir)
+
+|Name  |Type         |Default |Description                           |
+|------|-------------|--------|--------------------------------------|
+|name  |string       |    	  |name of JSON storage                  |
+|length|integer/false|false   |	number of stored messages            |
+|dir   |string       |./chats |	folder for storing all json storages |
+
+**deletelastmessage(user)** - Deletes a last message of user  
 
 ### Example
 ```javascript
@@ -56,7 +75,7 @@ console.log(test.messages);
 ```
 
 ## Coverage
-File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 ----------|---------|----------|---------|---------|-------------------
-All files |   92.86 |    81.25 |    92.5 |   93.67 |
- index.js |   92.86 |    81.25 |    92.5 |   93.67 | 75-76,230-232
+All files |   93.33 |    82.35 |   93.33 |   94.05 | 
+ index.js |   93.33 |    82.35 |   93.33 |   94.05 | 75-76,242-244
