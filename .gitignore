@@ -76,6 +76,6 @@ typings/
 .fusebox/
 .coveralls.yml
 chat.db
-chats/test.json
+chats/
 
 docdash/
