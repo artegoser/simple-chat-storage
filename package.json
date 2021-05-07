@@ -1,6 +1,6 @@
 {
   "name": "simple-chat-storage",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Simple chat storage for chat's",
   "homepage": "https://github.com/artegoser/simple-chat-storage",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "coverage": "nyc npm test",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
     "docs": "jsdoc index.js -t docdash -d D:\\github\\artegoser.github.io\\simple-chat-storage\\documentation -r ./README.md",
-    "buildall": "npm run coveralls && npm run docs"
+    "buildall": "npm run coveralls && npm run docs && npm publish"
   },
   "nyc": {
     "exclude": "**/*.spec.js"

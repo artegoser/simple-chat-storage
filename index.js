@@ -8,18 +8,35 @@ class JsonChatStorage {
      * @param {string} name name of JSON storage 
      * @param {integer|false} length number of stored messages
      * @param {string} dir folder for storing all json storages
+     * @param {Object|none} meta metadata for JSON storage
      */
-	constructor(name, length=false, dir="./chats"){
+	constructor(name, length=false, dir="chats", meta){
         this.meslength = length;
         this._name = name;
         this._dir = dir;
+        if (!fs.existsSync(this._dir)) fs.mkdirSync(this._dir);
+
         try{
             this.messages = this._req(`./${this._dir}/${this._name}.json`);
         } catch{
             this.messages = [];
+            this.backup();
         }
-		
-		if (!fs.existsSync(this._dir)) fs.mkdirSync(this._dir);
+
+        try{
+            this._meta = this._req(`./${this._dir}/${this._name}_meta.json`);
+            if(meta){
+                this._meta = Object.assign(this._meta, meta);
+                this.backup_meta();
+            }
+
+        } catch{
+            if(meta) {
+                this._meta = meta;
+                this.backup_meta();
+            }
+
+        }
     }
 
     _req(path){
@@ -78,14 +95,34 @@ class JsonChatStorage {
     /**
      * Get current time in format YYYY-MM-DD HH:MM:SS
      */
-     get time(){
+    get time(){
         return strftime("%Y-%m-%d %H:%M:%S");
+    }
+    /**
+     * adds metadata to meta
+     */
+    set add_meta(v){
+        this._meta = Object.assign(this._meta,v);
+        this.backup_meta();
+    }
+    set meta(v){
+        this._meta = v;
+        this.backup_meta();
+    }
+    get meta(){
+        return this._meta
     }
     /**
      * backups a JSON storage
      */
     backup(){
         fs.writeFileSync(`./${this._dir}/${this._name}.json`, JSON.stringify(this.messages, null, 4));
+    }
+    /**
+     * backups a metadata
+     */
+    backup_meta(){
+        fs.writeFileSync(`./${this._dir}/${this._name}_meta.json`, JSON.stringify(this._meta, null, 4));
     }
 
 }

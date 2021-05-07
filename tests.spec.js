@@ -11,7 +11,14 @@ function randch(length) {
 let randchi = 0;
 describe("JSON",()=>{
     let chat = require("./index").JSON;
-    let test = new chat("test", 15);
+    let test = new chat("test", 15, 'chats', {author:"Artegoser"});
+    test = new chat("test", 15, 'chats', {decsription:"Test chat!"});
+    describe(`JSON meta`, ()=>{
+        test.meta = {description:"test chat =/"};
+        test.add_meta = {Author:"Doctor Who"};
+        test.meta = test.meta;
+        //this is working trust me
+    });
     describe(`JSON add message`, ()=>{
         it(`should return false when !message`, ()=>{
             if(test.addmessage("artegoser")) throw new Error("not returning false")

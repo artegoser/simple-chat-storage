@@ -58,11 +58,12 @@ test.prepare().then(()=>{
 
 new JsonChatStorage(name, length, dir)
 
-|Name  |Type         |Default |Description                           |
-|------|-------------|--------|--------------------------------------|
-|name  |string       |    	  |name of JSON storage                  |
-|length|integer/false|false   |	number of stored messages            |
-|dir   |string       |./chats |	folder for storing all json storages |
+|Name  |Type         |Default |Description                         |
+|------|-------------|--------|------------------------------------|
+|name  |string       |    	  |name of JSON storage                |
+|length|integer/false|false   |number of stored messages           |
+|dir   |string       |./chats |folder for storing all json storages|
+|meta  |Object/none	 |	      |metadata for JSON storage           |
 
 **deletelastmessage(user)** - Deletes a last message of user  
 

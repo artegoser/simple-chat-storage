@@ -7,3 +7,9 @@
 ## sqlite
 ### the delete(where) function has been added
 ### added documentation
+# 1.1.10
+## sqlite
+### the sqlite_all function has been added
+# 1.1.11
+# Json
+## added Json meta
